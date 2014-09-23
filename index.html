@@ -71,7 +71,8 @@
   function showChord(keyboard, chord, inversion) {
     hideNotes(keyboard);
     if (inversion == null) inversion = "root";
-    keyboard.parentElement.querySelector("h2").innerHTML = chord+" "+inversion;
+    var title = keyboard.parentElement.querySelector("h2");
+    if (title) title.innerHTML = chord+" "+inversion;
     var notes = playableChord(chord, inversion);
     for (var i = 0; i != notes.length; i++) {
       showNote(keyboard, notes[i]);
@@ -115,7 +116,7 @@
       var chord = circle[i];
       var new_kbd = createKeyboard();
       new_kbd.id = "chord-"+i;
-      new_kbd.addEventListener("ready", function() {
+      new_kbd.addEventListener("load", function() {
         showChord(new_kbd, circle[chord],currentNote % 2 == 0? "root": "middle"); 
         console.log(new_kbd);
       });
