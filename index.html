@@ -2,6 +2,14 @@
 <html lang="en">
   <head>
     <title>Piano Chords Test</title>
+    <style>
+.keyboard-block {
+  float: left;
+}
+.keyboard-block h2 {
+  width: 400px;
+}
+    </style>
 <script>
   function playableChord(chord, inversion) {
     // Returns ['c', 'e', 'g'] for 'c', ['e', 'g', 'c'] for 'c', 'back'
@@ -69,6 +77,7 @@
   }
 
   function showChord(keyboard, chord, inversion) {
+    console.log("Playing "+chord+" "+inversion);
     hideNotes(keyboard);
     if (inversion == null) inversion = "root";
     var title = keyboard.parentElement.querySelector("h2");
@@ -104,23 +113,30 @@
   };
 
   function createKeyboard() {
+    var container = document.createElement("div");
+    container.classList.add("keyboard-block");
+    var header = document.createElement("h2");
+    container.appendChild(header);
     var keyboard = document.createElement("object");
     keyboard.type = "image/svg+xml";
     keyboard.data = "keyboard.svg";
-    return keyboard;
+    container.appendChild(keyboard);
+    return container;
   }
 
   function showCircle() {
     var placement = document.getElementById("placement");
     for (var i = 0; i != circle.length; ++i) {
-      var chord = circle[i];
-      var new_kbd = createKeyboard();
+      var chord = circle[(i+8)%circle.length];
+      var new_kbd_div = createKeyboard();
+      var new_kbd = new_kbd_div.querySelector("object")
       new_kbd.id = "chord-"+i;
-      new_kbd.addEventListener("load", function() {
-        showChord(new_kbd, circle[chord],currentNote % 2 == 0? "root": "middle"); 
-        console.log(new_kbd);
-      });
-      placement.appendChild(new_kbd);
+      (function(_kbd, _chord, _i) {
+        new_kbd.addEventListener("load", function() {
+          showChord(_kbd, _chord, _i % 2 == 0? "root": "middle"); 
+        });
+      })(new_kbd, chord, i);
+      placement.appendChild(new_kbd_div);
     }
   }
 
