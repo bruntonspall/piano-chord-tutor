@@ -20,19 +20,33 @@ function playableChord(chord, inversion) {
 
 var notes = [ "c", "csharp", "d", "eflat", "e", "f", "fsharp", "g", "aflat", "a", "bflat", "b" ];
 
+function lookupNote(i) {
+  return notes[i%12];
+}
+
+var inversions = {
+  "root": [0,1,2],
+  "middle": [2,0,1],
+  "back": [1,2,0]
+};
+
 function notesForChord(chord, inversion) {
-  chord = chord.toLowerCase();
-  // find root note
-  for(var i = 0; i != this.notes.length; ++i) {
-    if (this.notes[i] === chord) break;
+  var chord_lookup = chord.toLowerCase();
+  var intervals = [0, 4, 7]; // Major Chord
+  if (chord.length > 1 && chord[chord.length - 1] == "m") {
+    intervals = [0, 3, 7];
+    chord_lookup = chord.substr(0, chord.length-1);
   }
-  var intervals = [(i+0),(i+4)%12,(i+7)%12];
-  var inversions = {
-    "root": [0,1,2],
-    "middle": [2,0,1],
-    "back": [1,2,0]
-  };
-  return [this.notes[intervals[inversions[inversion][0]]], this.notes[intervals[inversions[inversion][1]]], this.notes[intervals[inversions[inversion][2]]]];
+  // find root note
+  for(var i = 0; i != notes.length; ++i) {
+    if (notes[i] === chord_lookup) break;
+  }
+  var inversion_lookup = inversions[inversion];
+  return [
+    lookupNote(i+intervals[inversion_lookup[0]]),
+    lookupNote(i+intervals[inversion_lookup[1]]),
+    lookupNote(i+intervals[inversion_lookup[2]])
+  ];
 }
 
 function calculateCircle() {
@@ -43,4 +57,3 @@ function calculateCircle() {
   }
   return result;
 }
-
