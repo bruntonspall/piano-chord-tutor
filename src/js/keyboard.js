@@ -14,7 +14,6 @@ function showNote(keyboard, note) {
 }
 
 function showChord(keyboard, chord, inversion) {
-  console.log("Playing "+chord+" "+inversion);
   hideNotes(keyboard);
   if (inversion === null) inversion = "root";
   var title = keyboard.parentElement.querySelector("h2");
@@ -29,7 +28,7 @@ var currentNote = 0;
 function playNote(keyboard) {
   var nextNote = circle[currentNote];
   showChord(keyboard, nextNote, currentNote % 2 === 0? "root": "middle");
-  if (++currentNote == circle.length) currentNote = 0; 
+  if (++currentNote == circle.length) currentNote = 0;
   keyboard.querySelector("#next_chord").innerHTML = "Next: "+circle[currentNote]+" "+(currentNote % 2 === 0? "root": "middle");
 }
 
@@ -52,6 +51,7 @@ function startCircle() {
 function createKeyboard() {
   var container = document.createElement("div");
   container.classList.add("keyboard-block");
+  container.classList.add("col-md-3");
   var header = document.createElement("h2");
   container.appendChild(header);
   var keyboard = document.createElement("object");
@@ -61,21 +61,24 @@ function createKeyboard() {
   return container;
 }
 
-function showCircle() {
+function showCircle(start, progression, minor) {
+
   var placement = document.getElementById("placement");
+  while (placement.firstChild) {
+    placement.removeChild(placement.firstChild);
+  }
   var circle = calculateCircle();
   for (var i = 0; i != circle.length; ++i) {
-    var chord = circle[(i+8)%circle.length];
+    var chord = circle[(i+start)%circle.length] + (minor?"m":"");
     var new_kbd_div = createKeyboard();
     var new_kbd = new_kbd_div.querySelector("object");
     new_kbd.id = "chord-"+i;
     /* jshint loopfunc: true */
     (function(_kbd, _chord, _i) {
       new_kbd.addEventListener("load", function() {
-        showChord(_kbd, _chord, _i % 2 === 0? "root": "middle"); 
+        showChord(_kbd, _chord, progression.split(",")[ _i % 2]);
       });
     })(new_kbd, chord, i);
     placement.appendChild(new_kbd_div);
   }
 }
-

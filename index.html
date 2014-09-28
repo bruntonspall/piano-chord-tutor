@@ -2,67 +2,90 @@
 <html lang="en">
   <head>
     <title>Piano Chords Test</title>
-    <style>
-.keyboard-block {
-  float: left;
-}
-.keyboard-block h2 {
-  width: 400px;
-}
-    </style>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="/static/js/piano-chord-tutor.min.js" ></script>
-<script>
-
-
-
+<script type="text/javascript">
   window.addEventListener("load", function() {
     console.log("Hiding notes");
     g_keyboard = document.getElementById("keyboard");
     hideNotes(g_keyboard);
     showChord(g_keyboard, "e", "root");
-    showCircle();
+    // showCircle(8, "root,middle");
     document.getElementById('start_chord').addEventListener("input", function() {
         var chord = document.getElementById('start_chord').value;
         var inversion = document.getElementById('inversions').value;
-        showChord(g_keyboard, chord, inversion);
+        var minor = document.getElementById('minor').checked?"m":"";
+        showChord(g_keyboard, chord+minor, inversion);
         });
     document.getElementById('inversions').addEventListener("input", function() {
         var chord = document.getElementById('start_chord').value;
         var inversion = document.getElementById('inversions').value;
-        showChord(g_keyboard, chord, inversion);
+        var minor = document.getElementById('minor').checked?"m":"";
+        showChord(g_keyboard, chord+minor, inversion);
+        });
+    document.getElementById('minor').addEventListener("change", function() {
+        var chord = document.getElementById('start_chord').value;
+        var inversion = document.getElementById('inversions').value;
+        var minor = document.getElementById('minor').checked?"m":"";
+        showChord(g_keyboard, chord+minor, inversion);
         });
   }, true);
 </script>
   </head>
   <body>
-    <h1>Keyboard</h1>
-    <h2>C#m</h2>
-    <object type="image/svg+xml" data="keyboard.svg" id="keyboard" ></object>
-    <form>
-      <select id="start_chord">
-        <option value="c">C</option> 
-        <option value="csharp">Db</option> 
-        <option value="d">D</option> 
-        <option value="eflat">Eb</option> 
-        <option value="e" selected>E</option> 
-        <option value="f">F</option> 
-        <option value="fsharp">F#</option> 
-        <option value="g">G</option> 
-        <option value="aflat">Ab</option> 
-        <option value="a">A</option> 
-        <option value="bflat">Bb</option> 
-        <option value="b">B</option>
-      </select>
-      <select id="inversions">
-        <option value="root" selected>Root</option>
-        <option value="middle">Middle</option>
-        <option value="back">Back</option>
-      </select>
-      <input type=checkbox id="minor" value=minor>Minor Chords</input>
-    </form>
-    <button onclick="startCircle();" id="play">Play Circle</button>
-    <button onclick="displayCircle();" id="display">Display Chords</button>
-    <br/>
-    <div id="placement"></div>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Piano Tutor</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Chord Selector</a></li>
+            <li><a href="/circle.html">Circle of Fifths</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+<h1>Keyboard</h1>
+<form role="form" class="form-inline">
+  <div class="form-group">
+    <label for="start_chord">Chord</label>
+    <select id="start_chord" class="form-control">
+      <option value="c">C</option>
+      <option value="csharp">Db</option>
+      <option value="d">D</option>
+      <option value="eflat">Eb</option>
+      <option value="e" selected>E</option>
+      <option value="f">F</option>
+      <option value="fsharp">F#</option>
+      <option value="g">G</option>
+      <option value="aflat">Ab</option>
+      <option value="a">A</option>
+      <option value="bflat">Bb</option>
+      <option value="b">B</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="inversions">Inversion</label>
+    <select id="inversions" class="form-control">
+      <option value="root" selected>Root</option>
+      <option value="middle">Middle</option>
+      <option value="back">Back</option>
+    </select>
+  </div>
+  <div class="checkbox">
+    <label for="minor">
+      <input type=checkbox id="minor" value=minor> Minor
+      </label>
+  </div>
+</form>
+
+<h2>C#m</h2>
+<object type="image/svg+xml" data="keyboard.svg" id="keyboard" ></object>
+    </div>
   </body>
 </html>
